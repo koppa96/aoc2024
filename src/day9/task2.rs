@@ -10,7 +10,9 @@ pub fn solve(input_path: String) -> utils::Result {
 }
 
 fn compact(fs: &mut Vec<Option<u32>>) {
+  let mut spaces = find_empty_spaces(fs);
   let mut j = fs.len() - 1;
+
   loop {
     while j > 0 && fs[j] == None {
       j -= 1;
@@ -27,15 +29,17 @@ fn compact(fs: &mut Vec<Option<u32>>) {
     }
 
     let size = end_idx - start_idx + 1;
-    if let Some(idx) = find_empty_space_before(start_idx, size, fs) {
-      mv(fs, start_idx, idx, size);
+    if let Some(sp) = find_empty_space_before(start_idx, size, &mut spaces) {
+      mv(fs, start_idx, sp.start, size);
+      sp.len -= size;
+      sp.start += size;
     }
 
     j = start_idx - 1;
   }
 }
 
-fn find_start(fs: &mut Vec<Option<u32>>, end: usize) -> usize {
+fn find_start(fs: &Vec<Option<u32>>, end: usize) -> usize {
   for i in (0..=end).rev() {
     if fs[i] != fs[end] {
       return i + 1;
@@ -52,18 +56,45 @@ fn mv(fs: &mut Vec<Option<u32>>, src_start_idx: usize, dst_start_idx: usize, siz
   }
 }
 
-fn find_empty_space_before(idx: usize, size: usize, fs: &Vec<Option<u32>>) -> Option<usize> {
-  let mut empty_space_size = 0;
-  for i in 0..idx {
-    if fs[i] == None {
-      empty_space_size += 1;
-      if empty_space_size == size {
-        return Some(i - size + 1);
-      }
-    } else {
-      empty_space_size = 0;
+fn find_empty_space_before(idx: usize, size: usize, spaces: &mut Vec<Space>) -> Option<&mut Space> {
+  for sp in spaces {
+    if sp.start > idx {
+      return None;
+    }
+
+    if sp.len >= size {
+      return Some(sp);
     }
   }
 
   None
+}
+
+struct Space {
+  start: usize,
+  len: usize,
+}
+
+fn find_empty_spaces(fs: &Vec<Option<u32>>) -> Vec<Space> {
+  let mut spaces: Vec<Space> = Vec::new();
+  let mut current: Option<Space> = None;
+  for i in 0..fs.len() {
+    match fs[i] {
+      Some(_) => {
+        if let Some(sp) = current {
+          spaces.push(sp);
+          current = None;
+        }
+      }
+      None => {
+        if let Some(sp) = &mut current {
+          sp.len += 1;
+        } else {
+          current = Some(Space { start: i, len: 1 })
+        }
+      }
+    }
+  }
+
+  spaces
 }
