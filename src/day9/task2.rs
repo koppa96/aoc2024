@@ -10,38 +10,45 @@ pub fn solve(input_path: String) -> utils::Result {
 }
 
 fn compact(fs: &mut Vec<Option<u32>>) {
-  let mut j = fs.len() as i32 - 1;
-  while j >= 0 {
-    while j >= 0 && fs[j as usize] == None {
+  let mut j = fs.len() - 1;
+  loop {
+    while j > 0 && fs[j] == None {
       j -= 1;
     }
 
-    if j < 0 {
+    if j == 0 && fs[j] == None {
       break;
     }
 
-    let file_id = fs[j as usize].unwrap();
     let end_idx = j;
-    while j >= 0 && fs[j as usize] != None && fs[j as usize].unwrap() == file_id {
-      j -= 1;
-    }
-    let start_idx = j + 1;
-
-    if j < 0 {
+    let start_idx = find_start(fs, end_idx);
+    if start_idx == 0 {
       break;
     }
+
+    j = start_idx - 1;
 
     let size = end_idx - start_idx + 1;
-    let space_start = find_empty_space_before(start_idx as usize, size as usize, fs);
-    match space_start {
-      Some(idx) => {
-        for i in 0..(end_idx - start_idx + 1) {
-          fs[idx + i as usize] = fs[start_idx as usize + i as usize];
-          fs[start_idx as usize + i as usize] = None;
-        }
-      }
-      None => {}
+    if let Some(idx) = find_empty_space_before(start_idx, size, fs) {
+      mv(fs, start_idx, idx, size);
     }
+  }
+}
+
+fn find_start(fs: &mut Vec<Option<u32>>, end: usize) -> usize {
+  for i in (0..=end).rev() {
+    if fs[i] != fs[end] {
+      return i + 1;
+    }
+  }
+
+  0
+}
+
+fn mv(fs: &mut Vec<Option<u32>>, src_start_idx: usize, dst_start_idx: usize, size: usize) {
+  for i in 0..size {
+    fs[dst_start_idx + i] = fs[src_start_idx + i];
+    fs[src_start_idx + i] = None;
   }
 }
 
