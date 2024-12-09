@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 mod utils;
 
 use clap::{Parser, Subcommand};
@@ -36,6 +37,8 @@ enum Commands {
   Day7(day7::Arguments),
   #[command(about = "Commands for solving tasks for day 8.")]
   Day8(day8::Arguments),
+  #[command(about = "Commands for solving tasks for day 9.")]
+  Day9(day9::Arguments),
 }
 
 fn main() {
@@ -50,6 +53,7 @@ fn main() {
     Commands::Day6(day) => day6::match_task(day),
     Commands::Day7(day) => day7::match_task(day),
     Commands::Day8(day) => day8::match_task(day),
+    Commands::Day9(day) => day9::match_task(day),
   };
 
   utils::handle_error(result);
