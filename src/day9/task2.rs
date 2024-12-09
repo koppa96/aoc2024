@@ -26,12 +26,12 @@ fn compact(fs: &mut Vec<Option<u32>>) {
       break;
     }
 
-    j = start_idx - 1;
-
     let size = end_idx - start_idx + 1;
     if let Some(idx) = find_empty_space_before(start_idx, size, fs) {
       mv(fs, start_idx, idx, size);
     }
+
+    j = start_idx - 1;
   }
 }
 
