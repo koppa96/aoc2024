@@ -1,100 +1,69 @@
-use crate::day9::common::{checksum, read_fs};
+use crate::day9::common::read_nums;
 use crate::utils;
+use std::io;
 
 pub fn solve(input_path: String) -> utils::Result {
   let mut fs = read_fs(input_path)?;
   compact(&mut fs);
-  println!("{}", checksum(&fs));
+  println!("{}", checksum_fs(&fs));
 
   Ok(())
 }
 
-fn compact(fs: &mut Vec<Option<u32>>) {
-  let mut spaces = find_empty_spaces(fs);
-  let mut j = fs.len() - 1;
+struct Segment {
+  start: usize,
+  len: usize,
+  fid: Option<usize>,
+}
 
-  loop {
-    while j > 0 && fs[j] == None {
-      j -= 1;
+fn read_fs(input_path: String) -> io::Result<Vec<Segment>> {
+  let nums = read_nums(input_path)?;
+  let mut fs: Vec<Segment> = Vec::new();
+  let mut start_idx = 0;
+  for i in 0..nums.len() {
+    fs.push(Segment {
+      start: start_idx,
+      len: nums[i] as usize,
+      fid: if i % 2 == 0 { Some(i / 2) } else { None },
+    });
+
+    start_idx += nums[i] as usize;
+  }
+
+  Ok(fs)
+}
+
+fn compact(fs: &mut Vec<Segment>) {
+  for i in (0..fs.len()).rev() {
+    if let Some(_) = fs[i].fid {
+      if let Some(idx) = find_empty_segment_before(i, fs[i].len, fs) {
+        fs[i].start = fs[idx].start;
+        fs[idx].start += fs[i].len;
+        fs[idx].len -= fs[i].len;
+      }
     }
-
-    if j == 0 && fs[j] == None {
-      break;
-    }
-
-    let end_idx = j;
-    let start_idx = find_start(fs, end_idx);
-    if start_idx == 0 {
-      break;
-    }
-
-    let size = end_idx - start_idx + 1;
-    if let Some(sp) = find_empty_space_before(start_idx, size, &mut spaces) {
-      mv(fs, start_idx, sp.start, size);
-      sp.len -= size;
-      sp.start += size;
-    }
-
-    j = start_idx - 1;
   }
 }
 
-fn find_start(fs: &Vec<Option<u32>>, end: usize) -> usize {
-  for i in (0..=end).rev() {
-    if fs[i] != fs[end] {
-      return i + 1;
-    }
-  }
-
-  0
-}
-
-fn mv(fs: &mut Vec<Option<u32>>, src_start_idx: usize, dst_start_idx: usize, size: usize) {
-  for i in 0..size {
-    fs[dst_start_idx + i] = fs[src_start_idx + i];
-    fs[src_start_idx + i] = None;
-  }
-}
-
-fn find_empty_space_before(idx: usize, size: usize, spaces: &mut Vec<Space>) -> Option<&mut Space> {
-  for sp in spaces {
-    if sp.start > idx {
-      return None;
-    }
-
-    if sp.len >= size {
-      return Some(sp);
+fn find_empty_segment_before(idx: usize, len: usize, fs: &Vec<Segment>) -> Option<usize> {
+  for i in 1..idx {
+    if fs[i].fid == None && fs[i].len >= len {
+      return Some(i);
     }
   }
 
   None
 }
 
-struct Space {
-  start: usize,
-  len: usize,
-}
-
-fn find_empty_spaces(fs: &Vec<Option<u32>>) -> Vec<Space> {
-  let mut spaces: Vec<Space> = Vec::new();
-  let mut current: Option<Space> = None;
-  for i in 0..fs.len() {
-    match fs[i] {
-      Some(_) => {
-        if let Some(sp) = current {
-          spaces.push(sp);
-          current = None;
-        }
-      }
-      None => {
-        if let Some(sp) = &mut current {
-          sp.len += 1;
-        } else {
-          current = Some(Space { start: i, len: 1 })
-        }
+fn checksum_fs(fs: &Vec<Segment>) -> usize {
+  let mut sum = 0;
+  for segment in fs {
+    if let Some(fid) = segment.fid {
+      for i in 0..segment.len {
+        sum += (segment.start + i) * fid;
       }
     }
   }
 
-  spaces
+  sum
 }
