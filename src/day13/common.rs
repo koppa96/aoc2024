@@ -34,6 +34,12 @@ impl Game {
   }
 
   pub fn min_cost_to_win(&self) -> Option<u64> {
+    // Solve the system of equations for
+    // p0 = a0*A + b0*B
+    // p1 = a1*A + b1*B
+    // Where A and B are the number of button presses for the respective button
+    // Only positive, and integer solutions are valid
+
     let p0: i64 = self.prize.0 as i64;
     let p1: i64 = self.prize.1 as i64;
     let a0: i64 = self.a.0 as i64;
