@@ -36,3 +36,20 @@ impl Robot {
     }
   }
 }
+
+pub fn compute_quadrant_counts(robots: &Vec<Robot>) -> [i32; 4] {
+  let mut quadrants: [i32; 4] = [0, 0, 0, 0];
+  for robot in robots {
+    if robot.pos.0 < WIDTH / 2 && robot.pos.1 < HEIGHT / 2 {
+      quadrants[0] += 1;
+    } else if robot.pos.0 > WIDTH / 2 && robot.pos.1 < HEIGHT / 2 {
+      quadrants[1] += 1;
+    } else if robot.pos.0 < WIDTH / 2 && robot.pos.1 > HEIGHT / 2 {
+      quadrants[2] += 1;
+    } else if robot.pos.0 > WIDTH / 2 && robot.pos.1 > HEIGHT / 2 {
+      quadrants[3] += 1;
+    }
+  }
+
+  quadrants
+}
