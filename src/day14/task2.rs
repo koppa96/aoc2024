@@ -36,6 +36,7 @@ fn is_potential_xmas_tree(robots: &Vec<Robot>) -> bool {
     }
   }
 
+  // If the robots are very grouped up in one quadrant, it's sus
   quadrants[0] > (quadrants[1] + quadrants[2] + quadrants[3])
     || quadrants[1] > (quadrants[0] + quadrants[2] + quadrants[3])
     || quadrants[2] > (quadrants[0] + quadrants[1] + quadrants[3])
