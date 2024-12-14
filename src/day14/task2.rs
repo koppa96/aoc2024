@@ -36,10 +36,10 @@ fn is_potential_xmas_tree(robots: &Vec<Robot>) -> bool {
     }
   }
 
-  quadrants[0] > (quadrants[1] + quadrants[2] + quadrants[3]) / 1
-    || quadrants[1] > (quadrants[0] + quadrants[2] + quadrants[3]) / 1
-    || quadrants[2] > (quadrants[0] + quadrants[1] + quadrants[3]) / 1
-    || quadrants[3] > (quadrants[0] + quadrants[1] + quadrants[2]) / 1
+  quadrants[0] > (quadrants[1] + quadrants[2] + quadrants[3])
+    || quadrants[1] > (quadrants[0] + quadrants[2] + quadrants[3])
+    || quadrants[2] > (quadrants[0] + quadrants[1] + quadrants[3])
+    || quadrants[3] > (quadrants[0] + quadrants[1] + quadrants[2])
 }
 
 fn print(robots: &Vec<Robot>) {
