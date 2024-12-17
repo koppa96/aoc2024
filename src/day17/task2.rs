@@ -12,20 +12,11 @@ pub fn solve(input_path: String) -> utils::Result {
 }
 
 fn traverse(mut program: Program, r: Range<i64>, len: usize) -> Result<i64, String> {
-  if len == program.instructions.len() {
-    if slice_equals(program.output.as_slice(), program.instructions.as_slice()) {
-      return Ok(r.start);
-    }
-
-    return Err("Not found".to_string());
-  }
-
   for i in r {
     program.reset(i, 0, 0);
     program.run()?;
-
-    if len > program.instructions.len() {
-      println!("{len}");
+    if slice_equals(program.output.as_slice(), program.instructions.as_slice()) {
+      return Ok(i);
     }
 
     let slice_start = program.instructions.len() - len;
