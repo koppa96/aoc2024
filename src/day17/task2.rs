@@ -4,14 +4,14 @@ use std::ops::Range;
 
 pub fn solve(input_path: String) -> utils::Result {
   let program = Program::parse(input_path)?;
-  let result = traverse(program, 0..8, 1)?;
+  let result = backtrack_self_output(program, 0..8, 1)?;
 
   println!("{result}");
 
   Ok(())
 }
 
-fn traverse(mut program: Program, r: Range<i64>, len: usize) -> Result<i64, String> {
+fn backtrack_self_output(mut program: Program, r: Range<i64>, len: usize) -> Result<i64, String> {
   for i in r {
     program.reset(i, 0, 0);
     program.run()?;
@@ -22,7 +22,7 @@ fn traverse(mut program: Program, r: Range<i64>, len: usize) -> Result<i64, Stri
     let slice_start = program.instructions.len() - len;
     let instruction_slice = &program.instructions[slice_start..program.instructions.len()];
     if slice_equals(program.output.as_slice(), instruction_slice) {
-      if let Ok(result) = traverse(program.clone(), i * 8..(i + 1) * 8, len + 1) {
+      if let Ok(result) = backtrack_self_output(program.clone(), i * 8..(i + 1) * 8, len + 1) {
         return Ok(result);
       }
     }
