@@ -2,6 +2,7 @@ use crate::utils::read_lines;
 use regex::Regex;
 use std::error::Error;
 
+#[derive(Clone)]
 pub struct Program {
   pub register_a: i64,
   pub register_b: i64,
