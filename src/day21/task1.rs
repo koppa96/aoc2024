@@ -39,7 +39,7 @@ fn instructions_to_instructions(instructions: Vec<char>) -> Vec<char> {
     if current_pos.0 == 0 && pos.1 == 0 {
       do_vertical_movement(movement.0, &mut new_instructions);
       do_horizontal_movement(movement.1, &mut new_instructions);
-    } else if current_pos.1 == 0 && pos.0 == 1 {
+    } else if current_pos.1 == 0 && pos.0 == 0 {
       do_horizontal_movement(movement.1, &mut new_instructions);
       do_vertical_movement(movement.0, &mut new_instructions);
     } else if movement.1 < 0 {

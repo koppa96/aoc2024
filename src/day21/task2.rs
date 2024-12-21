@@ -82,7 +82,7 @@ fn to_instructions(start: char, end: char) -> Vec<char> {
   if start_pos.0 == 0 && end_pos.1 == 0 {
     do_vertical_movement(movement.0, &mut instructions);
     do_horizontal_movement(movement.1, &mut instructions);
-  } else if start_pos.1 == 0 && end_pos.0 == 1 {
+  } else if start_pos.1 == 0 && end_pos.0 == 0 {
     do_horizontal_movement(movement.1, &mut instructions);
     do_vertical_movement(movement.0, &mut instructions);
   } else if movement.1 < 0 {
