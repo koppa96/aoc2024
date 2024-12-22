@@ -1,15 +1,15 @@
+use crate::utils;
+use clap::{Args, Subcommand};
+
 mod common;
 mod task1;
 mod task2;
 
-use crate::utils;
-use clap::{Args, Subcommand};
-
 #[derive(Debug, Subcommand)]
 pub enum Commands {
-  #[command(about = "Solves task 1 for day 21.", arg_required_else_help = true)]
+  #[command(about = "Solves task 1 for day 22.", arg_required_else_help = true)]
   Task1 { input_path: String },
-  #[command(about = "Solves task 2 for day 21.", arg_required_else_help = true)]
+  #[command(about = "Solves task 2 for day 22.", arg_required_else_help = true)]
   Task2 { input_path: String },
 }
 
