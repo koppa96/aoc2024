@@ -49,10 +49,7 @@ fn bron_kerbosch<'a>(
   }
 
   let mut max = Vec::new();
-  loop {
-    if p.is_empty() {
-      break;
-    }
+  while !p.is_empty() {
     let mut new_r = r.clone();
     new_r.push(p[0]);
 
