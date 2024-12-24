@@ -11,6 +11,7 @@ mod day2;
 mod day21;
 mod day22;
 mod day23;
+mod day24;
 mod day3;
 mod day4;
 mod day5;
@@ -72,6 +73,8 @@ enum Commands {
   Day22(day22::Arguments),
   #[command(about = "Commands for solving tasks for day 23.")]
   Day23(day23::Arguments),
+  #[command(about = "Commands for solving tasks for day 24.")]
+  Day24(day24::Arguments),
 }
 
 fn main() {
@@ -98,6 +101,7 @@ fn main() {
     Commands::Day21(day) => day21::match_task(day),
     Commands::Day22(day) => day22::match_task(day),
     Commands::Day23(day) => day23::match_task(day),
+    Commands::Day24(day) => day24::match_task(day),
   };
 
   utils::handle_error(result);

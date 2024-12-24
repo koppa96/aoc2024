@@ -6,9 +6,9 @@ use clap::{Args, Subcommand};
 
 #[derive(Debug, Subcommand)]
 pub enum Commands {
-  #[command(about = "Solves task 1 for day 23.", arg_required_else_help = true)]
+  #[command(about = "Solves task 1 for day 24.", arg_required_else_help = true)]
   Task1 { input_path: String },
-  #[command(about = "Solves task 2 for day 23.", arg_required_else_help = true)]
+  #[command(about = "Solves task 2 for day 24.", arg_required_else_help = true)]
   Task2 { input_path: String },
 }
 
