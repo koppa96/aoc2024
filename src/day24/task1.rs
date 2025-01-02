@@ -1,4 +1,3 @@
-use crate::day24::common::{BinaryOperation, Const, Operator, Resolver};
 use crate::utils;
 use crate::utils::read_lines;
 use regex::Regex;
@@ -58,4 +57,49 @@ pub fn solve(input_path: String) -> utils::Result {
   println!("{value}");
 
   Ok(())
+}
+
+trait Resolver {
+  fn resolve(&self, wires: &HashMap<String, Box<dyn Resolver>>) -> bool;
+}
+
+struct Const {
+  value: bool,
+}
+
+impl Resolver for Const {
+  fn resolve(&self, _: &HashMap<String, Box<dyn Resolver>>) -> bool {
+    self.value
+  }
+}
+
+struct BinaryOperation {
+  lhs: String,
+  rhs: String,
+  op: Operator,
+}
+
+impl Resolver for BinaryOperation {
+  fn resolve(&self, wires: &HashMap<String, Box<dyn Resolver>>) -> bool {
+    let lhs_val = wires[&self.lhs].resolve(wires);
+    let rhs_val = wires[&self.rhs].resolve(wires);
+
+    self.op.apply(lhs_val, rhs_val)
+  }
+}
+
+enum Operator {
+  And,
+  Or,
+  Xor,
+}
+
+impl Operator {
+  fn apply(&self, lhs: bool, rhs: bool) -> bool {
+    match self {
+      Operator::And => lhs && rhs,
+      Operator::Or => lhs || rhs,
+      Operator::Xor => lhs ^ rhs,
+    }
+  }
 }
